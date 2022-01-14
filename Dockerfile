@@ -4,7 +4,7 @@ USER root
 
 WORKDIR '/app'
 
-ARG GODOT_VERSION=3.2.2
+ARG GODOT_VERSION=3.4.2
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -32,16 +32,10 @@ RUN wget https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${G
     && mv Godot_v${GODOT_VERSION}-stable_linux_headless.64 /usr/local/bin/godot \
     && rm Godot_v${GODOT_VERSION}-stable_linux_headless.64.zip
 
-COPY ./web/ ./web/
-RUN curl -sL https://deb.nodesource.com/setup_12.x  | bash - \
-    && apt-get -y install nodejs
-
-RUN cd /app/web && npm install
-
 COPY ./godot-project/ ./godot-project/
 
-RUN cd /app/godot-project && godot --export "Client" ../web/game/game && mv ../web/game/game ../web/game/index.html
+RUN cd /app/godot-project && godot --export "Server" ../server
 
-EXPOSE 8080
+EXPOSE 9080
 
-CMD cd /app/web && npm start
+CMD ["godot", "--main-pack", "server.pck"]
