@@ -80,7 +80,10 @@ func _close_request(id, code, reason):
 	var message = Message.new()
 	message.disconnected_closed = true
 	message.content = id
-	_server.get_peer(id).put_packet(message.get_raw())
+	
+	for player_id in _connected_players[id]:
+		if (player_id != id):
+			_server.get_peer(player_id).put_packet(message.get_raw())
 
 func _disconnected(id, was_clean = false):
 	print("Client %d disconnected, clean: %s" % [id, str(was_clean)])
@@ -89,7 +92,10 @@ func _disconnected(id, was_clean = false):
 	var message = Message.new()
 	message.disconnected_disconnected = true
 	message.content = id
-	_server.get_peer(id).put_packet(message.get_raw())
+	
+	for player_id in _connected_players[id]:
+		if (player_id != id):
+			_server.get_peer(player_id).put_packet(message.get_raw())
 
 func _on_data(id):
 	var message = Message.new()
