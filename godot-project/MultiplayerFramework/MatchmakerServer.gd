@@ -76,10 +76,20 @@ func remove_player_from_connections(id):
 func _close_request(id, code, reason):
 	print("Client %d disconnecting with code: %d, reason: %s" % [id, code, reason])
 	remove_player_from_connections(id)
+	
+	var message = Message.new()
+	message.disconnected_closed = true
+	message.content = id
+	_server.get_peer(id).put_packet(message.get_raw())
 
 func _disconnected(id, was_clean = false):
 	print("Client %d disconnected, clean: %s" % [id, str(was_clean)])
 	remove_player_from_connections(id)
+	
+	var message = Message.new()
+	message.disconnected_disconnected = true
+	message.content = id
+	_server.get_peer(id).put_packet(message.get_raw())
 
 func _on_data(id):
 	var message = Message.new()
