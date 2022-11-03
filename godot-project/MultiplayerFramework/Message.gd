@@ -14,6 +14,7 @@ var match_start : bool
 var is_echo : bool
 var disconnected_closed : bool
 var disconnected_disconnected : bool
+var match_size : int
 
 var content
 
