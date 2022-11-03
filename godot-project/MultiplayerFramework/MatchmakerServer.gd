@@ -49,6 +49,9 @@ func _connected(id, proto):
 	message.content = id
 	_server.get_peer(id).put_packet(message.get_raw())
 
+func _match_size():
+	pass
+
 func create_new_match():
 	var new_match = []
 	for i in range(match_size):
