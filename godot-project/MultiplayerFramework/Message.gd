@@ -5,6 +5,7 @@ const MATCH_START = 2
 const IS_ECHO = 4
 const DISCONNECTED_CLOSED = 8
 const DISCONNECTED_DISCONNECTED = 16
+const MATCH_SIZE = 32
 
 const _BYTE_MASK = 255
 
@@ -25,6 +26,7 @@ func get_raw() -> PoolByteArray:
 	byte = set_bit(byte, MATCH_START, match_start)
 	byte = set_bit(byte, DISCONNECTED_CLOSED, disconnected_closed)
 	byte = set_bit(byte, DISCONNECTED_DISCONNECTED, disconnected_disconnected)
+	byte = set_bit(byte, MATCH_SIZE, match_size)
 	
 	message.append(byte)
 	message.append_array(var2bytes(content))
@@ -39,6 +41,7 @@ func from_raw(var arr : PoolByteArray):
 	match_start = get_bit(flags, MATCH_START)
 	disconnected_closed = get_bit(flags, DISCONNECTED_CLOSED)
 	disconnected_disconnected = get_bit(flags, DISCONNECTED_DISCONNECTED)
+	match_size = get_bit(flags, MATCH_SIZE)
 	
 	content = null
 	if (arr.size() > 1):
