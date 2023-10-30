@@ -35,8 +35,8 @@ RUN wget https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${G
 
 COPY ./godot-project/ ./godot-project/
 
-RUN cd /app/godot-project && godot --headless --export-pack Server ../server
+RUN cd /app/godot-project && godot --headless --export-release Server2 ../server
 
 EXPOSE 9080
 
-CMD ["godot", "--main-pack", "server.pck"]
+CMD ["godot", "--headless", "--main-pack", "server.pck"]
