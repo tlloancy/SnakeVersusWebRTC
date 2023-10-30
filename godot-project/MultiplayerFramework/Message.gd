@@ -18,8 +18,8 @@ var match_size : int
 
 var content
 
-func get_raw() -> PoolByteArray:
-	var message = PoolByteArray()
+func get_raw() -> PackedByteArray:
+	var message = PackedByteArray()
 	
 	var byte = 0
 	byte = set_bit(byte, SERVER_LOGIN, server_login)
@@ -30,11 +30,11 @@ func get_raw() -> PoolByteArray:
 	byte = set_bit(byte, MATCH_SIZE, match_size)
 	
 	message.append(byte)
-	message.append_array(var2bytes(content))
+	message.append_array(content)
 	
 	return message
 
-func from_raw(var arr : PoolByteArray):
+func from_raw(var arr : PackedByteArray):
 	var flags = arr[0]
 	
 	server_login = get_bit(flags, SERVER_LOGIN)
@@ -46,7 +46,8 @@ func from_raw(var arr : PoolByteArray):
 	
 	content = null
 	if (arr.size() > 1):
-		content = bytes2var(arr.subarray(1, -1))
+		content = arr.slice(1, arr.size())
+		content = content.decode_var(0, true)
 
 static func get_bit(var byte : int, var flag : int) -> bool:
 	return byte & flag == flag
