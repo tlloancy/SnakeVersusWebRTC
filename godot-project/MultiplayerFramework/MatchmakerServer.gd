@@ -136,6 +136,8 @@ func _process(delta):
 		message.content = 0
 		message.disconnected_disconnected = true
 		socket.put_packet(message.get_raw())
+	else:
+		pass
 
 	if (_match_queue.size() >= match_size):
 		create_new_match()
