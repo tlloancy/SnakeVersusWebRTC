@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     wget \
     unzip \
-    python \
-    python-openssl \
+    python3.11 \
+    python3.11-openssl \
     curl \
     gnupg \
     && rm -rf /var/lib/apt/lists/*
