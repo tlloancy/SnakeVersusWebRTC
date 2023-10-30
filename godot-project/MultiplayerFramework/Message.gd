@@ -49,10 +49,10 @@ func from_raw(var arr : PackedByteArray):
 		content = arr.slice(1, arr.size())
 		content = content.decode_var(0, true)
 
-static func get_bit(var byte : int, var flag : int) -> bool:
+func get_bit(var byte : int, var flag : int) -> bool:
 	return byte & flag == flag
 
-static func set_bit(var byte : int, var flag : int, var is_set : bool = true) -> int:
+func set_bit(var byte : int, var flag : int, var is_set : bool = true) -> int:
 	if is_set:
 		return byte | flag
 	else:
