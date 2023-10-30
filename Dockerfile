@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     unzip \
     python3.11 \
-    python3.11-openssl \
+    python3-openssl \
     curl \
     gnupg \
     && rm -rf /var/lib/apt/lists/*
