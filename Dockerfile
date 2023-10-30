@@ -34,7 +34,7 @@ RUN wget https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/Godot_v${G
 
 COPY ./godot-project/ ./godot-project/
 
-RUN cd /app/godot-project && godot --export "Server" ../server
+RUN cd /app/godot-project && godot --export-pack "Server" ../server
 
 EXPOSE 9080
 
