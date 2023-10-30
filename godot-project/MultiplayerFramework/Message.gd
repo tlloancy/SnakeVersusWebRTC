@@ -20,7 +20,7 @@ var content
 
 func get_raw() -> PackedByteArray:
 	var message = PackedByteArray()
-	
+
 	var byte = 0
 	byte = set_bit(byte, SERVER_LOGIN, server_login)
 	byte = set_bit(byte, IS_ECHO, is_echo)
@@ -28,22 +28,22 @@ func get_raw() -> PackedByteArray:
 	byte = set_bit(byte, DISCONNECTED_CLOSED, disconnected_closed)
 	byte = set_bit(byte, DISCONNECTED_DISCONNECTED, disconnected_disconnected)
 	byte = set_bit(byte, MATCH_SIZE, match_size)
-	
+
 	message.append(byte)
 	message.append_array(content)
-	
+
 	return message
 
 func from_raw(var arr : PackedByteArray):
 	var flags = arr[0]
-	
+
 	server_login = get_bit(flags, SERVER_LOGIN)
 	is_echo = get_bit(flags, IS_ECHO)
 	match_start = get_bit(flags, MATCH_START)
 	disconnected_closed = get_bit(flags, DISCONNECTED_CLOSED)
 	disconnected_disconnected = get_bit(flags, DISCONNECTED_DISCONNECTED)
 	match_size = get_bit(flags, MATCH_SIZE)
-	
+
 	content = null
 	if (arr.size() > 1):
 		content = arr.slice(1, arr.size())
