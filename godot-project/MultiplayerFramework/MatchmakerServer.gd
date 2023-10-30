@@ -3,7 +3,8 @@ extends Node
 export(int) var match_size
 
 const PORT = 9080
-var _server = WebSocketServer.new()
+var _server = TCPServer.new()
+var socket = WebSocketPeer.new()
 
 var _connected_players = {}
 var _match_queue = []
@@ -36,6 +37,12 @@ func _ready():
 		print("Unable to start server")
 		set_process(false)
 
+	var spTCP =_server.take_connection()
+	err = socket.accept_stream(spTCP)
+	if err != OK:
+		print("Server Fail !")
+		set_process(false)
+
 	_logger_coroutine()
 
 
@@ -47,7 +54,7 @@ func _connected(id, proto):
 	var message = Message.new()
 	message.server_login = true
 	message.content = id
-	_server.get_peer(id).put_packet(message.get_raw())
+	socket.put_packet(message.get_raw())
 
 func _match_size():
 	pass
@@ -61,7 +68,7 @@ func create_new_match():
 		var message = Message.new()
 		message.match_start = true
 		message.content = new_match
-		_server.get_peer(_match_queue[0]).put_packet(message.get_raw())
+		socket.put_packet(message.get_raw())
 		_match_queue.remove(0)
 
 	for i in range(new_match.size()):
@@ -85,7 +92,7 @@ func _close_request(id, code, reason):
 	
 	for player_id in _connected_players[id]:
 		if (player_id != id):
-			_server.get_peer(player_id).put_packet(message.get_raw())
+			socket.put_packet(message.get_raw())
 
 	remove_player_from_connections(id)
 
@@ -98,20 +105,37 @@ func _disconnected(id, was_clean = false):
 	
 	for player_id in _connected_players[id]:
 		if (player_id != id):
-			_server.get_peer(player_id).put_packet(message.get_raw())
+			socket.put_packet(message.get_raw())
 			
 	remove_player_from_connections(id)
 
 func _on_data(id):
 	var message = Message.new()
-	message.from_raw(_server.get_peer(id).get_packet())
+	message.from_raw(socket.get_packet())
 
 	for player_id in _connected_players[id]:
 		if (player_id != id || (player_id == id && message.is_echo)):
-			_server.get_peer(player_id).put_packet(message.get_raw())
+			socket.put_packet(message.get_raw())
 
 func _process(delta):
-	_server.poll()
+	socket.poll()
+	var message = Message.new()
+	var state = socket.get_ready_state()
+	if state == WebSocketPeer.STATE_OPEN:
+		while socket.get_available_packet_count():
+			print("Packet: ", socket.get_packet())
+			message.from_raw(socket.get_packet())
+	elif state == WebSocketPeer.STATE_CLOSING:
+		# Keep polling to achieve proper close.
+		pass
+	elif state == WebSocketPeer.STATE_CLOSED:
+		var code = socket.get_close_code()
+		var reason = socket.get_close_reason()
+		print("WebSocket closed with code: %d, reason %s. Clean: %s" % [code, reason, code != -1])
+		set_process(false) # Stop processing.
+		message.content = 0
+		message.disconnected_disconnected = true
+		socket.put_packet(message.get_raw())
 
 	if (_match_queue.size() >= match_size):
 		create_new_match()
