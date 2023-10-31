@@ -115,7 +115,7 @@ func _process(delta):
 		var buf = 0
 		var state = _conn.get_status()
 		if state == StreamPeerTCP.STATUS_CONNECTED:
-			while buf = _conn.get_available_bytes():
+			while true = _conn.get_available_bytes():
 				_on_data(buf, _conn)
 		elif state == StreamPeerTCP.STATUS_CONNECTING:
 			pass
