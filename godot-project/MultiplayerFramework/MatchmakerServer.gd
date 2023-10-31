@@ -97,9 +97,9 @@ func _disconnected(id, was_clean = false):
 		
 	remove_player_from_connections(id)
 
-func _on_data(id):
+func _on_data(buf, id):
 	var message = Message.new()
-	message.from_raw(id.get_data())
+	message.from_raw(id.get_data(buf))
 
 	for player_id in _connected_players[id]:
 		if (player_id != id || (player_id == id && message.is_echo)):
@@ -112,10 +112,11 @@ func _process(delta):
 
 	for _conn in _connected_players.keys():
 		_conn.poll()
+		var buf = 0
 		var state = _conn.get_status()
 		if state == StreamPeerTCP.STATUS_CONNECTED:
-			while _conn.get_available_bytes():
-				_on_data(_conn)
+			while buf = _conn.get_available_bytes():
+				_on_data(buf, _conn)
 		elif state == StreamPeerTCP.STATUS_CONNECTING:
 			pass
 		elif state == StreamPeerTCP.STATUS_NONE:
