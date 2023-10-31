@@ -106,7 +106,7 @@ func _on_data(id):
 			id.put_data(message.get_raw())
 
 func _process(delta):
-	if server.is_connection_available():
+	if _server.is_connection_available():
 		var spTCP = _server.take_connection()
 		_connected(spTCP, "TCP")
 
