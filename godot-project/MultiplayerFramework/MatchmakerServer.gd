@@ -57,7 +57,7 @@ func create_new_match(spTCP):
 		message.match_start = true
 		message.content = new_match
 		spTCP.put_data(message.get_raw())
-		_match_queue.remove(0)
+		_match_queue.remove_at(0)
 
 	for i in range(new_match.size()):
 		_connected_players[new_match[i]] = new_match
