@@ -1,6 +1,6 @@
 extends Node
 
-export(int) var match_size
+@export var match_size: int
 
 const PORT = 9080
 var _server = TCPServer.new()
@@ -11,7 +11,7 @@ var _match_queue = []
 
 func _logger_coroutine():
 	while(true):
-		yield(get_tree().create_timer(3), "timeout")
+		await get_tree().create_timer(3).timeout
 
 		var p = ""
 		for player in _connected_players.keys():
@@ -27,10 +27,10 @@ func _logger_coroutine():
 func _ready():
 	print("Starting server...")
 
-	_server.connect("client_connected", self, "_connected")
-	_server.connect("client_disconnected", self, "_disconnected")
-	_server.connect("client_close_request", self, "_close_request")
-	_server.connect("data_received", self, "_on_data")
+	_server.connect("client_connected", Callable(self, "_connected"))
+	_server.connect("client_disconnected", Callable(self, "_disconnected"))
+	_server.connect("client_close_request", Callable(self, "_close_request"))
+	_server.connect("data_received", Callable(self, "_on_data"))
 
 	var err = _server.listen(PORT)
 	if err != OK:

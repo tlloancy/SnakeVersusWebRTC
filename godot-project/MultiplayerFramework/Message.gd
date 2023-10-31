@@ -34,7 +34,7 @@ func get_raw() -> PackedByteArray:
 
 	return message
 
-func from_raw(var arr : PackedByteArray):
+func from_raw(arr : PackedByteArray):
 	var flags = arr[0]
 
 	server_login = get_bit(flags, SERVER_LOGIN)
@@ -49,10 +49,10 @@ func from_raw(var arr : PackedByteArray):
 		content = arr.slice(1, arr.size())
 		content = content.decode_var(0, true)
 
-func get_bit(var byte : int, var flag : int) -> bool:
+func get_bit(byte : int, flag : int) -> bool:
 	return byte & flag == flag
 
-func set_bit(var byte : int, var flag : int, var is_set : bool = true) -> int:
+func set_bit(byte : int, flag : int, is_set : bool = true) -> int:
 	if is_set:
 		return byte | flag
 	else:

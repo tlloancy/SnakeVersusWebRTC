@@ -6,35 +6,7 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[ {
-"base": "Node",
-"class": "ClientManager",
-"language": "GDScript",
-"path": "res://MultiplayerFramework/ClientManager.gd"
-}, {
-"base": "Reference",
-"class": "Message",
-"language": "GDScript",
-"path": "res://MultiplayerFramework/Message.gd"
-}, {
-"base": "Node",
-"class": "RTC_Client",
-"language": "GDScript",
-"path": "res://MultiplayerFramework/WebRTCClient.gd"
-}, {
-"base": "TextureRect",
-"class": "Tile",
-"language": "GDScript",
-"path": "res://Client/Game/Tile.gd"
-} ]
-_global_script_class_icons={
-"ClientManager": "",
-"Message": "",
-"RTC_Client": "",
-"Tile": ""
-}
+config_version=5
 
 [Config]
 
@@ -46,10 +18,11 @@ IsClient=true
 
 config/name="Snake Versus"
 run/main_scene="res://Main.tscn"
+config/features=PackedStringArray("4.1")
 config/icon="res://Client/Assets/Tiles/tile_0018.png"
 
 [rendering]
 
+environment/defaults/default_environment="res://default_env.tres"
 quality/driver/driver_name="GLES2"
 vram_compression/import_etc=true
-environment/default_environment="res://default_env.tres"
