@@ -99,6 +99,7 @@ func _disconnected(id, was_clean = false):
 
 func _on_data(buf, id):
 	var message = Message.new()
+	print(id.get_data(buf))
 	message.from_raw(id.get_data(buf))
 
 	for player_id in _connected_players[id]:
