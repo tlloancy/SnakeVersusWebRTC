@@ -48,6 +48,7 @@ func from_raw(arr : PackedByteArray):
 	print("allo")
 	if (arr.size() > 1):
 		print("alloallo")
+		print(arr)
 		content = bytes_to_var_with_objects(arr.slice(1, -1))
 		print("alloalloallo")
 
