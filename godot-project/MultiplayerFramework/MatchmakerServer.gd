@@ -118,7 +118,8 @@ func _process(delta):
 		if state == StreamPeerTCP.STATUS_CONNECTED:
 			while true:
 				buf = _conn.get_available_bytes()
-				if buf == 0:
+				print(buf)
+				if buf <= 0:
 					break
 				_on_data(buf, _conn)
 		elif state == StreamPeerTCP.STATUS_CONNECTING:
