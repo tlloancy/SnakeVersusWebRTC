@@ -102,7 +102,9 @@ func _on_data(buf, id):
 	var message = Message.new()
 	print("j ai rentré quand meme!")
 	print(buf)
-	message.from_raw(id.get_data(buf))
+	var res = id.get_data(buf)
+	print(res)
+	message.from_raw(res)
 	print("un")
 	for player_id in _connected_players[id]:
 		print(id)
