@@ -30,9 +30,7 @@ func get_raw() -> PackedByteArray:
 	byte = set_bit(byte, MATCH_SIZE, match_size)
 
 	message.append(byte)
-	print(content)
-	content = message.encode_var(0, content, true)
-	message.append(content)
+	message.append_array(var_to_bytes(content))
 
 	return message
 
@@ -48,9 +46,7 @@ func from_raw(arr : PackedByteArray):
 
 	content = null
 	if (arr.size() > 1):
-		content = arr.slice(1, arr.size())
-		print(content)
-		content = content.decode_var(0, true)
+		content = bytes_to_var(arr.slice(1, arr.size()))
 
 func get_bit(byte : int, flag : int) -> bool:
 	return byte & flag == flag
