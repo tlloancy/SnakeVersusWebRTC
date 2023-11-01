@@ -46,7 +46,7 @@ func from_raw(arr : PackedByteArray):
 
 	content = null
 	if (arr.size() > 1):
-		content = bytes_to_var_with_objects(arr.slice(1, arr.size()))
+		content = bytes_to_var_with_objects(arr.slice(1, -1))
 
 func get_bit(byte : int, flag : int) -> bool:
 	return byte & flag == flag
