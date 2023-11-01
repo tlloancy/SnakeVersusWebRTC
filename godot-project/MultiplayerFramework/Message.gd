@@ -35,9 +35,11 @@ func get_raw() -> PackedByteArray:
 	return message
 
 func from_raw(arr : PackedByteArray):
+	print(arr)
 	var flags = arr[0]
-
+	print(arr)
 	server_login = get_bit(flags, SERVER_LOGIN)
+	print(arr)
 	is_echo = get_bit(flags, IS_ECHO)
 	match_start = get_bit(flags, MATCH_START)
 	disconnected_closed = get_bit(flags, DISCONNECTED_CLOSED)
