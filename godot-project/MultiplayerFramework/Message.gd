@@ -31,7 +31,7 @@ func get_raw() -> PackedByteArray:
 
 	message.append(byte)
 	content = message.encode_var(0, content, true)
-	message.append_array(content)
+	message.append(content)
 
 	return message
 
