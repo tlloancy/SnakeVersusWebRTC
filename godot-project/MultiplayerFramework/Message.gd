@@ -43,9 +43,10 @@ func from_raw(arr : PackedByteArray):
 	disconnected_closed = get_bit(flags, DISCONNECTED_CLOSED)
 	disconnected_disconnected = get_bit(flags, DISCONNECTED_DISCONNECTED)
 	match_size = get_bit(flags, MATCH_SIZE)
-
+	print(arr)
 	content = null
 	print("allo")
+	print(arr)
 	if (arr.size() > 1):
 		print("alloallo")
 		print(arr)
