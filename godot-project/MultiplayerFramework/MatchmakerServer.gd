@@ -104,10 +104,13 @@ func _on_data(buf, id):
 	print(buf)
 	print(id.get_data(buf))
 	message.from_raw(id.get_data(buf))
-
+	print("un")
 	for player_id in _connected_players[id]:
+		print(id)
 		if (player_id != id || (player_id == id && message.is_echo)):
+			print(player_id)
 			id.put_data(message.get_raw())
+	print("quatro")
 
 func _process(delta):
 	if _server.is_connection_available():
