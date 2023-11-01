@@ -35,7 +35,8 @@ func _ready():
 
 
 func _connected(id, proto):
-	print("Client %d connected with protocol: %s" % [id, proto])
+	print("hiiiiiihhooouu")
+	print("Client %d connected with protocol: %s" % [id.get_instance_id(), proto])
 	_connected_players[id] = [] # match queue
 	_match_queue.append(id)
 
@@ -72,7 +73,7 @@ func remove_player_from_connections(id):
 		_connected_players.erase(id)
 
 func _close_request(id, code, reason):
-	print("Client %d disconnecting with code: %d, reason: %s" % [id, code, reason])
+	print("Client %d disconnecting with code: %d, reason: %s" % [id.get_instance_id(), code, reason])
 
 	var message = Message.new()
 	message.disconnected_closed = true
@@ -85,7 +86,7 @@ func _close_request(id, code, reason):
 	remove_player_from_connections(id)
 
 func _disconnected(id, was_clean = false):
-	print("Client %d disconnected, clean: %s" % [id, str(was_clean)])
+	print("Client %d disconnected, clean: %s" % [id.get_instance_id(), str(was_clean)])
 
 	var message = Message.new()
 	message.disconnected_disconnected = true
@@ -99,6 +100,8 @@ func _disconnected(id, was_clean = false):
 
 func _on_data(buf, id):
 	var message = Message.new()
+	print("j ai rentré quand meme!")
+	print(buf)
 	print(id.get_data(buf))
 	message.from_raw(id.get_data(buf))
 
