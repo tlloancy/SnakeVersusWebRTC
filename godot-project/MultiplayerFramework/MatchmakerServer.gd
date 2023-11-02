@@ -4,7 +4,7 @@ extends Node
 
 const PORT = 9080
 var _server = TCPServer.new()
-
+var spTCP
 var _connected_players = {}
 var _match_queue = []
 
@@ -116,7 +116,7 @@ func _on_data(buf, id, ids):
 
 func _process(delta):
 	if _server.is_connection_available():
-		var spTCP = _server.take_connection()
+		spTCP = _server.take_connection()
 		_connected(spTCP, "TCP")
 
 	for _conn in _connected_players.keys():
@@ -129,7 +129,7 @@ func _process(delta):
 			var status = wsp.get_ready_state()
 			if status == WebSocketPeer.STATE_OPEN:
 				while wsp.get_available_packet_count():
-					_on_data(buf, ws, _conn)
+					_on_data(buf, wsp, _conn)
 			#while true:
 			#	buf = _conn.get_available_bytes()
 			#	if buf <= 0:
