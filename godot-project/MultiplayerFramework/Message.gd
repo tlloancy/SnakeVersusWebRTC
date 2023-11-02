@@ -34,7 +34,7 @@ func get_raw() -> PackedByteArray:
 
 	return message
 
-func from_raw(arr : PackedByteArray):
+func from_raw(arr):
 	print(arr)
 	var flags = arr[0]
 	print(arr)
