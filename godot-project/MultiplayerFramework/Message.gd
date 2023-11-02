@@ -58,7 +58,7 @@ func from_raw(arr):
 		print(arr.slice(1, arr.size()))
 		print("OOOOOOOOOOOWWWWWWWW")
 		print(arr.slice(1, arr.size() - 1))
-		content = bytes_to_var_with_objects(arr.slice(1, -1))
+		content = bytes_to_var_with_objects(arr.slice(1, arr.size()))
 		print("alloalloallo")
 
 func get_bit(byte : int, flag : int) -> bool:
