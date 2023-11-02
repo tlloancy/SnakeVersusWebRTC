@@ -98,19 +98,20 @@ func _disconnected(id, was_clean = false):
 		
 	remove_player_from_connections(id)
 
-func _on_data(buf, id):
+func _on_data(buf, id, ids):
 	var message = Message.new()
 	print("j ai rentré quand meme!")
 	print(buf)
-	var res = id.get_data(buf)
+	var res = id.get_packet()
+	#var res = id.get_data(buf)
 	print(res)
 	message.from_raw(res)
 	print("un")
-	for player_id in _connected_players[id]:
-		print(id)
-		if (player_id != id || (player_id == id && message.is_echo)):
+	for player_id in _connected_players[ids]:
+		print(ids)
+		if (player_id != ids || (player_id == ids && message.is_echo)):
 			print(player_id)
-			id.put_data(message.get_raw())
+			id.put_packet(message.get_raw())
 	print("quatro")
 
 func _process(delta):
@@ -123,11 +124,17 @@ func _process(delta):
 		var buf = 0
 		var state = _conn.get_status()
 		if state == StreamPeerTCP.STATUS_CONNECTED:
-			while true:
-				buf = _conn.get_available_bytes()
-				if buf <= 0:
-					break
-				_on_data(buf, _conn)
+			var wsp = WebSocketPeer.new()
+			wsp.accept_stream(spTCP)
+			var status = wsp.get_ready_state()
+			if status == WebSocketPeer.STATE_OPEN:
+				while wsp.get_available_packet_count():
+					_on_data(buf, ws, _conn)
+			#while true:
+			#	buf = _conn.get_available_bytes()
+			#	if buf <= 0:
+			#		break
+			#	_on_data(buf, _conn)
 		elif state == StreamPeerTCP.STATUS_CONNECTING:
 			pass
 		elif state == StreamPeerTCP.STATUS_NONE:
