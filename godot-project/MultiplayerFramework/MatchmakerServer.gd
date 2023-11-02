@@ -43,7 +43,7 @@ func _connected(id, proto):
 
 	var message = Message.new()
 	message.server_login = true
-	message.content = id
+	message.content = id.get_instance_id()
 	id.put_packet(message.get_raw())
 
 func _match_size():
