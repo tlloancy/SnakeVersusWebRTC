@@ -107,7 +107,7 @@ func _on_data(id):
 	print(res)
 	message.from_raw(res)
 	print("un")
-	for player_id in _connected_players[ids]:
+	for player_id in _connected_players[id]:
 		print(id)
 		if (player_id != id || (player_id == id && message.is_echo)):
 			print(player_id)
