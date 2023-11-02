@@ -126,6 +126,7 @@ func _process(delta):
 		if state == StreamPeerTCP.STATUS_CONNECTED:
 			var wsp = WebSocketPeer.new()
 			wsp.accept_stream(spTCP)
+			wsp.poll()
 			var status = wsp.get_ready_state()
 			if status == WebSocketPeer.STATE_OPEN:
 				while wsp.get_available_packet_count():
