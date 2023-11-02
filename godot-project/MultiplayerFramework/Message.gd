@@ -52,6 +52,12 @@ func from_raw(arr):
 	if (arr.size() > 1):
 		print("alloallo")
 		print(arr)
+		print("OW")
+		print(arr.slice(1, -1))
+		print("OOOOWW")
+		print(arr.slice(1, arr.size()))
+		print("OOOOOOOOOOOWWWWWWWW")
+		print(arr.slice(1, arr.size() - 1))
 		content = bytes_to_var_with_objects(arr.slice(1, -1))
 		print("alloalloallo")
 
