@@ -119,6 +119,8 @@ func _process(delta):
 		spTCP = _server.take_connection()
 		wsp = WebSocketPeer.new()
 		wsp.accept_stream(spTCP)
+		while wsp.get_ready_state() != 1:
+			wsp.poll()
 		_connected(wsp, "TCP")
 
 	for _conn in _connected_players.keys():
@@ -126,8 +128,8 @@ func _process(delta):
 		var buf = 0
 		var state = _conn.get_ready_state()
 		if state == WebSocketPeer.STATE_OPEN:
-			while wsp.get_available_packet_count():
-				_on_data(wsp)
+			while _conn.get_available_packet_count():
+				_on_data(_conn)
 			#while true:
 			#	buf = _conn.get_available_bytes()
 			#	if buf <= 0:
