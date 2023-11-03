@@ -36,17 +36,16 @@ func _ready():
 	_logger_coroutine()
 
 
-func _connected(id, proto):
-	print("hiiiiiihhooouu")
-	print("Client %d connected with protocol: %s" % [id.get_instance_id(), proto])
-	_connected_players_objects[id] = []
-	_connected_players[id.get_instance_id()] = [] # match queue
-	_match_queue.append(id.get_instance_id())
+func _connected(obj, id, proto):
+	print("Client %d connected with protocol: %s" % [id, proto])
+	_connected_players_objects[obj] = id
+	_connected_players[id] = [] # match queue
+	_match_queue.append(id)
 
 	var message = Message.new()
 	message.server_login = true
-	message.content = id.get_instance_id()
-	id.put_packet(message.get_raw())
+	message.content = id
+	obj.put_packet(message.get_raw())
 
 func _match_size():
 	pass
@@ -79,44 +78,43 @@ func remove_player_from_connections(obj, id):
 		_connected_players.erase(id)
 
 func _close_request(id, code, reason):
-	print("Client %d disconnecting with code: %d, reason: %s" % [id.get_instance_id(), code, reason])
+	print("Client %d disconnecting with code: %d, reason: %s" % [_connected_players_objects[obj], code, reason])
 
 	var message = Message.new()
 	message.disconnected_closed = true
-	message.content = id.get_instance_id()
+	message.content = _connected_players_objects[obj]
 
-	for player_id in _connected_players[id.get_instance_id()]:
-		if (player_id != id.get_instance_id()):
-			id.put_packet(message.get_raw())
+	for player_id in _connected_players[_connected_players_objects[obj]]:
+		if (player_id != _connected_players_objects[obj]):
+			obj.put_packet(message.get_raw())
 
-	remove_player_from_connections(id, id.get_instance_id())
+	remove_player_from_connections(obj, _connected_players_objects[obj])
 
-func _disconnected(id, was_clean = false):
-	print("Client %d disconnected, clean: %s" % [id.get_instance_id(), str(was_clean)])
+func _disconnected(obj, was_clean = false):
+	print("Client %d disconnected, clean: %s" % [_connected_players_objects[obj], str(was_clean)])
 
 	var message = Message.new()
 	message.disconnected_disconnected = true
-	message.content = id.get_instance_id()
+	message.content = _connected_players_objects[obj]
 
-	for player_id in _connected_players[id.get_instance_id()]:
-		if (player_id != id.get_instance_id()):
-			id.put_packet(message.get_raw())
+	for player_id in _connected_players[_connected_players_objects[obj]]:
+		if (player_id != _connected_players_objects[obj]):
+			obj.put_packet(message.get_raw())
 		
-	remove_player_from_connections(id, id.get_instance_id())
+	remove_player_from_connections(obj, _connected_players_objects[obj])
 
-func _on_data(id):
+func _on_data(obj):
 	var message = Message.new()
 	print("j ai rentré quand meme!")
-	var res = id.get_packet()
-	#var res = id.get_data(buf)
+	var res = obj.get_packet()
+
 	print(res)
 	message.from_raw(res)
 	print("un")
-	for player_id in _connected_players[id.get_instance_id()]:
-		print(id)
-		if (player_id != id.get_instance_id() || (player_id == id.get_instance_id() && message.is_echo)):
+	for player_id in _connected_players[_connected_players_objects[obj]]:
+		if (player_id != _connected_players_objects[obj] || (player_id == _connected_players_objects[obj] && message.is_echo)):
 			print(player_id)
-			id.put_packet(message.get_raw())
+			obj.put_packet(message.get_raw())
 	print("quatro")
 
 func _process(delta):
@@ -126,7 +124,8 @@ func _process(delta):
 		wsp.accept_stream(spTCP)
 		while wsp.get_ready_state() != 1:
 			wsp.poll()
-		_connected(wsp, "TCP")
+		var id = randi_range(2, 1 << 30)
+		_connected(wsp, id, "TCP")
 
 	for _conn in _connected_players_objects.keys():
 		_conn.poll()
