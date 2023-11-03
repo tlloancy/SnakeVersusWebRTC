@@ -77,7 +77,7 @@ func remove_player_from_connections(obj, id):
 			_connected_players[id].erase(id)
 		_connected_players.erase(id)
 
-func _close_request(id, code, reason):
+func _close_request(obj, code, reason):
 	print("Client %d disconnecting with code: %d, reason: %s" % [_connected_players_objects[obj], code, reason])
 
 	var message = Message.new()
