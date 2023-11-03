@@ -7,6 +7,7 @@ var _server = TCPServer.new()
 var wsp : WebSocketPeer
 var spTCP : StreamPeerTCP
 var _connected_players = {}
+var _connected_players_objects = {}
 var _match_queue = []
 
 func _logger_coroutine():
@@ -38,8 +39,9 @@ func _ready():
 func _connected(id, proto):
 	print("hiiiiiihhooouu")
 	print("Client %d connected with protocol: %s" % [id.get_instance_id(), proto])
-	_connected_players[id] = [] # match queue
-	_match_queue.append(id)
+	_connected_players_objects[id] = []
+	_connected_players[id.get_instance_id()] = [] # match queue
+	_match_queue.append(id.get_instance_id())
 
 	var message = Message.new()
 	message.server_login = true
@@ -64,9 +66,12 @@ func create_new_match(wsp):
 	for i in range(new_match.size()):
 		_connected_players[new_match[i]] = new_match
 
-func remove_player_from_connections(id):
+func remove_player_from_connections(obj, id):
 	if _match_queue.has(id):
 		_match_queue.erase(id)
+
+	if _connected_players_objects.has(obj):
+		_connected_players_objects.erase(obj)
 
 	if _connected_players.has(id):
 		if _connected_players[id] != null:
@@ -78,26 +83,26 @@ func _close_request(id, code, reason):
 
 	var message = Message.new()
 	message.disconnected_closed = true
-	message.content = id
+	message.content = id.get_instance_id()
 
-	for player_id in _connected_players[id]:
-		if (player_id != id):
+	for player_id in _connected_players[id.get_instance_id()]:
+		if (player_id != id.get_instance_id()):
 			id.put_packet(message.get_raw())
 
-	remove_player_from_connections(id)
+	remove_player_from_connections(id, id.get_instance_id())
 
 func _disconnected(id, was_clean = false):
 	print("Client %d disconnected, clean: %s" % [id.get_instance_id(), str(was_clean)])
 
 	var message = Message.new()
 	message.disconnected_disconnected = true
-	message.content = id
+	message.content = id.get_instance_id()
 
-	for player_id in _connected_players[id]:
-		if (player_id != id):
+	for player_id in _connected_players[id.get_instance_id()]:
+		if (player_id != id.get_instance_id()):
 			id.put_packet(message.get_raw())
 		
-	remove_player_from_connections(id)
+	remove_player_from_connections(id, id.get_instance_id())
 
 func _on_data(id):
 	var message = Message.new()
@@ -107,9 +112,9 @@ func _on_data(id):
 	print(res)
 	message.from_raw(res)
 	print("un")
-	for player_id in _connected_players[id]:
+	for player_id in _connected_players[id.get_instance_id()]:
 		print(id)
-		if (player_id != id || (player_id == id && message.is_echo)):
+		if (player_id != id.get_instance_id() || (player_id == id.get_instance_id() && message.is_echo)):
 			print(player_id)
 			id.put_packet(message.get_raw())
 	print("quatro")
@@ -123,7 +128,7 @@ func _process(delta):
 			wsp.poll()
 		_connected(wsp, "TCP")
 
-	for _conn in _connected_players.keys():
+	for _conn in _connected_players_objects.keys():
 		_conn.poll()
 		var buf = 0
 		var state = _conn.get_ready_state()
