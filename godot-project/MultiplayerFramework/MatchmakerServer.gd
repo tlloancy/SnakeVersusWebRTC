@@ -147,5 +147,5 @@ func _process(delta):
 			_close_request(_conn, 00, "CLOSE")
 			pass
 
-	if (_match_queue.size() >= match_size):
-		create_new_match(_conn)
+		if (_match_queue.size() >= match_size):
+			create_new_match(_conn)
