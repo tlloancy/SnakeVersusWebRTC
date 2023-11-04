@@ -9,7 +9,6 @@ var spTCP : StreamPeerTCP
 var _connected_players = {}
 var _connected_players_objects = {}
 var _match_queue = []
-var thread
 
 func _logger_coroutine():
 	while(true):
@@ -33,8 +32,6 @@ func _ready():
 	if err != OK:
 		print("Unable to start server")
 		set_process(false)
-	thread = Thread.new()
-	thread.start(self._on_data.bind(null))
 
 	_logger_coroutine()
 
@@ -107,8 +104,6 @@ func _disconnected(obj, was_clean = false):
 	remove_player_from_connections(obj, _connected_players_objects[obj])
 
 func _on_data(obj):
-	if !obj:
-		return
 	var message = Message.new()
 	print("j ai rentré quand meme!")
 	print(obj)
