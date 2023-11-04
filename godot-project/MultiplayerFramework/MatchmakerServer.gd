@@ -106,19 +106,12 @@ func _disconnected(obj, was_clean = false):
 
 func _on_data(obj):
 	var message = Message.new()
-	print("j ai rentré quand meme!")
-	print(obj)
 	var res = obj.get_packet()
 
-	print(res)
 	message.from_raw(res)
-	print("un")
 	for player_id in _connected_players[_connected_players_objects[obj]]:
-		print(player_id)
 		if (player_id != _connected_players_objects[obj] || (player_id == _connected_players_objects[obj] && message.is_echo)):
-			print(player_id)
-			obj.put_packet(message.get_raw())
-	print("quatro")
+			_connected_players_objects.find_key(player_id).put_packet(message.get_raw())
 
 func _process(delta):
 	if _server.is_connection_available():
@@ -135,11 +128,7 @@ func _process(delta):
 		var buf = 0
 		var state = _conn.get_ready_state()
 		if state == WebSocketPeer.STATE_OPEN:
-			print(_conn)
-			print("previous")
 			while _conn.get_available_packet_count():
-				print("looooo")
-				print(_conn)
 				emit_signal("on_data", _conn)
 				#_on_data(_conn)
 			#while true:
