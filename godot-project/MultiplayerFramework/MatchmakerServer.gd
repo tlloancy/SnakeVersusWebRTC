@@ -60,7 +60,7 @@ func create_new_match():
 		var message = Message.new()
 		message.match_start = true
 		message.content = new_match
-		_connected_players_object.find_key(_match_queue[0]).put_packet(message.get_raw())
+		_connected_players_objects.find_key(_match_queue[0]).put_packet(message.get_raw())
 		_match_queue.remove_at(0)
 
 	for i in range(new_match.size()):
