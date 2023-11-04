@@ -115,7 +115,6 @@ func _process(delta):
 			pass
 		else: # STATUS_CLOSE
 			_closed(_conn, _conn.get_close_code(), _conn.get_close_reason())
-			set_process(false)
 			pass
 
 	if (_match_queue.size() >= match_size):
