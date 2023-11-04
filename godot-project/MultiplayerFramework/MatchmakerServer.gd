@@ -78,30 +78,9 @@ func remove_player_from_connections(obj, id):
 			_connected_players[id].erase(id)
 		_connected_players.erase(id)
 
-func _close_request(obj, code, reason):
-	print("Client %d disconnecting with code: %d, reason: %s" % [_connected_players_objects[obj], code, reason])
+func _closed(obj, code, reason):
+	print("Client %d closed with code: %d, reason: %s" % [_connected_players_objects[obj], code, reason])
 
-	var message = Message.new()
-	message.disconnected_closed = true
-	message.content = _connected_players_objects[obj]
-
-	for player_id in _connected_players[_connected_players_objects[obj]]:
-		if (player_id != _connected_players_objects[obj]):
-			obj.put_packet(message.get_raw())
-
-	remove_player_from_connections(obj, _connected_players_objects[obj])
-
-func _disconnected(obj, was_clean = false):
-	print("Client %d disconnected, clean: %s" % [_connected_players_objects[obj], str(was_clean)])
-
-	var message = Message.new()
-	message.disconnected_disconnected = true
-	message.content = _connected_players_objects[obj]
-
-	for player_id in _connected_players[_connected_players_objects[obj]]:
-		if (player_id != _connected_players_objects[obj]):
-			obj.put_packet(message.get_raw())
-		
 	remove_player_from_connections(obj, _connected_players_objects[obj])
 
 func _on_data(obj):
@@ -130,18 +109,12 @@ func _process(delta):
 		if state == WebSocketPeer.STATE_OPEN:
 			while _conn.get_available_packet_count():
 				emit_signal("on_data", _conn)
-				#_on_data(_conn)
-			#while true:
-			#	buf = _conn.get_available_bytes()
-			#	if buf <= 0:
-			#		break
-			#	_on_data(buf, _conn)
 		elif state == WebSocketPeer.STATE_CONNECTING:
 			pass
 		elif state == WebSocketPeer.STATE_CLOSING:
-			_disconnected(_conn)
+			pass
 		else: # STATUS_CLOSE
-			_close_request(_conn, 00, "CLOSE")
+			_closed(_conn, _conn.get_close_code(), _conn.get_close_reason())
 			pass
 
 	if (_match_queue.size() >= match_size):
