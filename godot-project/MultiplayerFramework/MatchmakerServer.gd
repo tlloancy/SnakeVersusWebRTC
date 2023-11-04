@@ -9,6 +9,7 @@ var spTCP : StreamPeerTCP
 var _connected_players = {}
 var _connected_players_objects = {}
 var _match_queue = []
+signal on_data(obj)
 
 func _logger_coroutine():
 	while(true):
@@ -32,7 +33,7 @@ func _ready():
 	if err != OK:
 		print("Unable to start server")
 		set_process(false)
-
+	self.connect("on_data", Callable(self, "_on_data"))
 	_logger_coroutine()
 
 
@@ -137,7 +138,8 @@ func _process(delta):
 			while _conn.get_available_packet_count():
 				print("looooo")
 				print(_conn)
-				_on_data(_conn)
+				emit_signal("on_data", _conn)
+				#_on_data(_conn)
 			#while true:
 			#	buf = _conn.get_available_bytes()
 			#	if buf <= 0:
