@@ -51,7 +51,7 @@ func _connected(obj, id, proto):
 func _match_size():
 	pass
 
-func create_new_match(wsp):
+func create_new_match():
 	var new_match = []
 	for i in range(match_size):
 		new_match.append(_match_queue[i])
@@ -60,7 +60,7 @@ func create_new_match(wsp):
 		var message = Message.new()
 		message.match_start = true
 		message.content = new_match
-		wsp.put_packet(message.get_raw())
+		_connected_players_object.find_key(_match_queue[0]).put_packet(message.get_raw())
 		_match_queue.remove_at(0)
 
 	for i in range(new_match.size()):
@@ -144,5 +144,5 @@ func _process(delta):
 			_close_request(_conn, 00, "CLOSE")
 			pass
 
-		if (_match_queue.size() >= match_size):
-			create_new_match(_conn)
+	if (_match_queue.size() >= match_size):
+		create_new_match()
