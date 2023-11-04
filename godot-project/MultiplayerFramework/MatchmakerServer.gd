@@ -130,14 +130,13 @@ func _process(delta):
 		_connected(wsp, id, "TCP")
 
 	for _conn in _connected_players_objects.keys():
-		print("loop1")
-		print(_conn)
-		print("loop2")
 		_conn.poll()
 		var buf = 0
 		var state = _conn.get_ready_state()
 		if state == WebSocketPeer.STATE_OPEN:
 			while _conn.get_available_packet_count():
+				print("looooo")
+				print(_conn)
 				_on_data(_conn)
 			#while true:
 			#	buf = _conn.get_available_bytes()
