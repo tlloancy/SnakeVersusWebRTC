@@ -86,7 +86,7 @@ func _closed(obj, code, reason):
 func _on_data(obj):
 	var message = Message.new()
 	var res = obj.get_packet()
-
+	print(res)
 	message.from_raw(res)
 	for player_id in _connected_players[_connected_players_objects[obj]]:
 		if (player_id != _connected_players_objects[obj] || (player_id == _connected_players_objects[obj] && message.is_echo)):
