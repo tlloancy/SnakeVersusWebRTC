@@ -96,11 +96,15 @@ func _process(delta):
 	if _server.is_connection_available():
 		spTCP = _server.take_connection()
 		wsp = WebSocketPeer.new()
-		wsp.accept_stream(spTCP)
-		while wsp.get_ready_state() != 1:
-			wsp.poll()
-		var id = randi_range(2, 1 << 30)
-		_connected(wsp, id, "TCP")
+		var err = wsp.accept_stream(spTCP)
+		if err != OK:
+			print("connection attempts closed code %d" % [err])
+			wsp.close(err)
+		else:
+			while wsp.get_ready_state() != 1:
+				wsp.poll()
+			var id = randi_range(2, 1 << 30)
+			_connected(wsp, id, "TCP")
 
 	for _conn in _connected_players_objects.keys():
 		_conn.poll()
