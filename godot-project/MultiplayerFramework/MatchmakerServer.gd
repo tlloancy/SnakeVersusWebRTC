@@ -107,7 +107,7 @@ func _process(delta):
 		var buf = 0
 		var state = _conn.get_ready_state()
 		if state == WebSocketPeer.STATE_OPEN:
-			while _conn.get_available_packet_count():
+			while _conn.get_available_packet_count() > 0 :
 				emit_signal("on_data", _conn)
 		elif state == WebSocketPeer.STATE_CONNECTING:
 			pass
