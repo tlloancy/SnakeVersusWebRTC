@@ -116,6 +116,7 @@ func _process(delta):
 				var id = randi_range(2, 1 << 30)
 				_connected(wsp, id, "TCP")
 			else:
+				wsp.close(6300)
 				print("Hand Shake Timeout")
 
 	for _conn in _connected_players_objects.keys():
