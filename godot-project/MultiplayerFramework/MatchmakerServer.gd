@@ -110,7 +110,7 @@ func _process(delta):
 				time_now = Time.get_unix_time_from_system()
 				wsp.poll()
 				time_elapsed = time_now - time_start
-				if time_elapsed >= WAIT_TIME
+				if time_elapsed >= WAIT_TIME:
 					break
 			if wsp.get_ready_state() == 1:
 				var id = randi_range(2, 1 << 30)
