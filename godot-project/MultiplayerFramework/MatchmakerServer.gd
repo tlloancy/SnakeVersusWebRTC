@@ -10,6 +10,10 @@ var _connected_players = {}
 var _connected_players_objects = {}
 var _match_queue = []
 signal on_data(obj)
+var time_start = 0
+var time_now = 0
+var time_elapsed = 0
+var WAIT_TIME = 3
 
 func _logger_coroutine():
 	while(true):
@@ -101,10 +105,18 @@ func _process(delta):
 			print("connection attempts closed code %d" % [err])
 			wsp.close(err)
 		else:
+			time_start = Time.get_unix_time_from_system()
 			while wsp.get_ready_state() != 1:
+				time_now = Time.get_unix_time_from_system()
 				wsp.poll()
-			var id = randi_range(2, 1 << 30)
-			_connected(wsp, id, "TCP")
+				time_elapsed = time_now - time_start
+				if time_elapsed >= WAIT_TIME
+					break
+			if wsp.get_ready_state() == 1:
+				var id = randi_range(2, 1 << 30)
+				_connected(wsp, id, "TCP")
+			else:
+				print("Hand Shake Timeout")
 
 	for _conn in _connected_players_objects.keys():
 		_conn.poll()
