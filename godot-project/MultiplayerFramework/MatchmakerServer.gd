@@ -27,7 +27,7 @@ func _logger_coroutine():
 		for id in _match_queue:
 			m += str(id) + " "
 
-		printt("[" + get_datetime_string_from_unix_time(Time.get_unix_time_from_system(), true) + "]Connected:   " + p)
+		printt("[" + Time.get_datetime_string_from_unix_time(Time.get_unix_time_from_system(), true) + "]Connected:   " + p)
 		printt("Match queue: " + m + "\n")
 
 func _ready():
