@@ -4,7 +4,7 @@ USER root
 
 WORKDIR '/app'
 
-ARG GODOT_VERSION=4.1.3
+ARG GODOT_VERSION=4.2.1
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
